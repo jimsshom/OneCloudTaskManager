@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+    <script src="./node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+
+
+    <title>Main</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-3" style="padding: 0">
+                <input type="text" class="form-control" placeholder="filename" aria-label="filename"
+                    aria-describedby="basic-addon1">
+            </div>
+            <div class="col-8" style="padding: 0">
+                <input type="text" class="form-control" placeholder="magnet_url" aria-label="magnet_url"
+                    aria-describedby="basic-addon1" style="display:inline-block">
+            </div>
+            <div class="col-1" style="padding: 0">
+                <button class="btn btn-outline-secondary" type="button" id="addButton" style="width: 100%">添加</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col list-group" id="list-tab" role="tablist" style="padding: 0">
+                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                    class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利1</h5>
+                    </div>
+                </a>
+                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                    class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利2</h5>
+                    </div>
+                </a>
+                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                    class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利3</h5>
+                    </div>
+                </a>
+                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
+                    class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利4</h5>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col collapse" id="collapseExample" style="padding: 0">
+                <div class="card card-body">
+                    二维码详情
+                    <br>
+                    <br>
+                    <br>
+                    magnet详情
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

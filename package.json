@@ -1,0 +1,23 @@
+{
+  "name": "onecloud-task-manager",
+  "version": "1.0.0",
+  "description": "just for onecloud",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "electron --inspect-brk=5858 ."
+  },
+  "author": "jimsshom",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "electron": "^5.0.3",
+    "electron-json-storage": "^4.1.6",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0",
+    "webpack": "^4.33.0"
+  },
+  "devDependencies": {
+    "electron-packager": "^13.1.1"
+  }
+}
