@@ -13,40 +13,160 @@
     <script src="./node_modules/popper.js/dist/umd/popper.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
 
-
     <title>Main</title>
 </head>
 
 <body>
-    <div class="row">
-        <div class="col-4">
-            <div class="list-group" id="list-tab" role="tablist">
-                <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list"
-                    href="#list-home" role="tab" aria-controls="home">Home</a>
-                <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list"
-                    href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-                <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list"
-                    href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-                <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list"
-                    href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+    <div class="container-fluid" style="padding: 0px">
+        <div class="row" style="position:fixed; top:0px; z-index:1070; width: 100%; margin: 0px">
+            <div class="col-3" style="padding: 0">
+                <input type="text" class="form-control" placeholder="filename" aria-label="filename"
+                    aria-describedby="basic-addon1">
+            </div>
+            <div class="col-9 d-inline-flex" style="padding: 0">
+                <input type="text" class="form-control" placeholder="magnet_url" aria-label="magnet_url"
+                    aria-describedby="basic-addon1">
+                <button class="btn btn-outline-secondary" type="button" id="addButton">+</button>
             </div>
         </div>
-        <div class="col-8">
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                    Test1...</div>
-                <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                    Test2......
-                </div>
-                <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                    Test3......
-                </div>
-                <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
-                    Test4......
+        <div class="row" style="width: 100%; margin: 0px; height: 38px">
+
+        </div>
+
+        <div class="row" style="width: 100%; margin: 0px">
+            <div class="col list-group" id="list-tab" role="tablist" style="overflow:scroll; padding: 0px">
+            </div>
+
+            <div class="col collapse" id="collapseExample"
+                style="position: fixed; top: 38px; left: 50%; height: 100%; z-index: 1060; padding: 0;">
+                <div class="card card-body" style="height: 100%">
+                    二维码详情
+                    <br>
+                    <br>
+                    <br>
+                    magnet详情
+                    <span id="testId"></span>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        let data = [
+            {
+                title: '切尔诺贝利1',
+                url: '测试url1'
+            },
+            {
+                title: '切尔诺贝利2',
+                url: '测试url2'
+            },
+            {
+                title: '切尔诺贝利3',
+                url: '测试url3'
+            },
+            {
+                title: '切尔诺贝利4',
+                url: '测试url4'
+            },
+            {
+                title: '切尔诺贝利5',
+                url: '测试url5'
+            },
+            {
+                title: '切尔诺贝利6',
+                url: '测试url6'
+            },
+            {
+                title: '切尔诺贝利7',
+                url: '测试url7'
+            },
+            {
+                title: '切尔诺贝利8',
+                url: '测试url8'
+            },
+            {
+                title: '切尔诺贝利9',
+                url: '测试url9'
+            },
+            {
+                title: '切尔诺贝利10',
+                url: '测试url10'
+            },
+        ]
+        let showingItemCnt = 0
+
+        // <a id="list_9" class="list-group-item list-group-item-action flex-column align-items-start">
+        //             <div class="d-flex w-100 justify-content-between">
+        //                 <h5 class="mb-1">切尔诺贝利4</h5>
+        //             </div>
+        //         </a>
+        function addItemToList(item) {
+            console.log(item)
+            let title = item['title']
+            let url = item['url']
+            let id = showingItemCnt++
+
+            let a = document.createElement('a')
+            a.id = 'list_' + id
+            a.setAttribute('data-title', title)
+            a.setAttribute('data-url', url)
+            a.classList.add('list-group-item')
+            a.classList.add('list-group-item-action')
+            a.classList.add('flex-column')
+            a.classList.add('align-items-start')
+
+            let div = document.createElement('div')
+            div.classList.add('d-flex')
+            div.classList.add('w-100')
+            div.classList.add('justify-content-between')
+
+            let h5 = document.createElement('h5')
+            h5.classList.add('mb-1')
+            h5.innerText = title
+
+            div.appendChild(h5)
+            a.appendChild(div)
+            //$('#list-tab').append(a)
+            console.log(a)
+            document.getElementById('list-tab').appendChild(a)
+        }
+
+        function showRight(index) {
+            $('#collapseExample').prop('currentIndex', index)
+            $('#testId').text(index)
+            $('#collapseExample').addClass('show')
+        }
+
+        function closeRight() {
+            $('#collapseExample').removeClass('show')
+        }
+
+
+
+        function init() {
+            for (let i in data) {
+                addItemToList(data[i])
+            }
+
+            $('#list-tab a').click(function () {
+                let isShow = $('#collapseExample').hasClass('show')
+                let id = $(this).prop('id')
+                let currentIndex = $('#collapseExample').prop('currentIndex')
+                if (!isShow) {
+                    showRight(id)
+                } else {
+                    closeRight()
+                    if (currentIndex != id) {
+                        showRight(id)
+                    }
+                }
+
+            })
+        }
+
+        init()
+    </script>
 
 </body>
 

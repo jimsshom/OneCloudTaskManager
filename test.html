@@ -18,61 +18,110 @@
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
+    <div class="container-fluid" style="padding: 0px">
+        <div class="row" style="position:fixed; top:0px; z-index:1070; width: 100%; margin: 0px">
             <div class="col-3" style="padding: 0">
                 <input type="text" class="form-control" placeholder="filename" aria-label="filename"
                     aria-describedby="basic-addon1">
             </div>
-            <div class="col-8" style="padding: 0">
+            <div class="col-9 d-inline-flex" style="padding: 0">
                 <input type="text" class="form-control" placeholder="magnet_url" aria-label="magnet_url"
-                    aria-describedby="basic-addon1" style="display:inline-block">
-            </div>
-            <div class="col-1" style="padding: 0">
-                <button class="btn btn-outline-secondary" type="button" id="addButton" style="width: 100%">添加</button>
+                    aria-describedby="basic-addon1">
+                <button class="btn btn-outline-secondary" type="button" id="addButton">+</button>
             </div>
         </div>
+        <div class="row" style="width: 100%; margin: 0px; height: 38px">
 
-        <div class="row">
-            <div class="col list-group" id="list-tab" role="tablist" style="padding: 0">
-                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-                    class="list-group-item list-group-item-action flex-column align-items-start">
+        </div>
+
+        <div class="row" style="width: 100%; margin: 0px">
+            <div class="col list-group" id="list-tab" role="tablist" style="overflow:scroll; padding: 0px">
+                <a id="list_1" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">切尔诺贝利1</h5>
                     </div>
                 </a>
-                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-                    class="list-group-item list-group-item-action flex-column align-items-start">
+                <a id="list_2" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">切尔诺贝利2</h5>
                     </div>
                 </a>
-                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-                    class="list-group-item list-group-item-action flex-column align-items-start">
+                <a id="list_3" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">切尔诺贝利3</h5>
                     </div>
                 </a>
-                <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"
-                    class="list-group-item list-group-item-action flex-column align-items-start">
+                <a id="list_4" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利4</h5>
+                    </div>
+                </a>
+                <a id="list_5" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利4</h5>
+                    </div>
+                </a>
+                <a id="list_6" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利4</h5>
+                    </div>
+                </a>
+                <a id="list_7" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利4</h5>
+                    </div>
+                </a>
+                <a id="list_8" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">切尔诺贝利4</h5>
+                    </div>
+                </a>
+                <a id="list_9" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">切尔诺贝利4</h5>
                     </div>
                 </a>
             </div>
 
-            <div class="col collapse" id="collapseExample" style="padding: 0">
-                <div class="card card-body">
+            <div class="col collapse" id="collapseExample" style="position: fixed; top: 38px; left: 50%; height: 100%; z-index: 1060; padding: 0;">
+                <div class="card card-body" style="height: 100%">
                     二维码详情
                     <br>
                     <br>
                     <br>
                     magnet详情
+                    <span id="testId"></span>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        function showRight(index) {
+            $('#collapseExample').prop('currentIndex', index)
+            $('#testId').text(index)
+            $('#collapseExample').addClass('show')
+        }
+
+        function closeRight() {
+            $('#collapseExample').removeClass('show')
+        }
+
+        $('#list-tab a').click(function(){
+            let isShow = $('#collapseExample').hasClass('show')
+            let id = $(this).prop('id')
+            let currentIndex = $('#collapseExample').prop('currentIndex')
+            if (!isShow) {
+                showRight(id)
+            } else {
+                closeRight()
+                if (currentIndex != id) {
+                    showRight(id)
+                }
+            }
+            
+        })
+    </script>
 
 </body>
 
