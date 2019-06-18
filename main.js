@@ -19,6 +19,8 @@ function createMainWindow() {
     mainWindow = new BrowserWindow({
         x: tmpX,
         y: tmpY,
+        width: 800,
+        height: 600,
         show: false,
         frame: true,
         webPreferences: {

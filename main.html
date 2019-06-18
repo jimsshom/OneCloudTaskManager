@@ -17,20 +17,20 @@
 </head>
 
 <body>
-    <div class="container-fluid" style="padding: 0px">
+    <div class="container-fluid" style="padding: 0px;">
         <div class="row" style="position:fixed; top:0px; z-index:1070; width: 100%; margin: 0px">
             <div class="col-3" style="padding: 0">
-                <input type="text" class="form-control" placeholder="filename" aria-label="filename"
+                <input id="titleInput" type="text" class="form-control" placeholder="filename" aria-label="filename"
                     aria-describedby="basic-addon1">
             </div>
             <div class="col-9 d-inline-flex" style="padding: 0">
-                <input type="text" class="form-control" placeholder="magnet_url" aria-label="magnet_url"
+                <input id="urlInput" type="text" class="form-control" placeholder="magnet_url" aria-label="magnet_url"
                     aria-describedby="basic-addon1">
                 <button class="btn btn-outline-secondary" type="button" id="addButton">+</button>
             </div>
         </div>
         <div class="row" style="width: 100%; margin: 0px; height: 38px">
-
+            <!-- 空白行，用于标题栏的置顶 -->
         </div>
 
         <div class="row" style="width: 100%; margin: 0px">
@@ -38,77 +38,73 @@
             </div>
 
             <div class="col collapse" id="collapseExample"
-                style="position: fixed; top: 38px; left: 50%; height: 100%; z-index: 1060; padding: 0;">
-                <div class="card card-body" style="height: 100%">
-                    二维码详情
-                    <br>
-                    <br>
-                    <br>
-                    magnet详情
-                    <span id="testId"></span>
+                style="position: fixed; top: 38px; left: 50%; height: 100%; width: 50%; z-index: 1060; padding: 0; overflow:scroll;">
+                <div class="card card-body" style="min-height: 100%; margin-bottom: 38px">
+                    <h1 id="contentTitle"></h1>
+                    <canvas id="qrcanvas"></canvas>
+                    <p id="contentUrl"></p>
+                    <span id="contentId" style="color: grey"></span>
+                    <div style="display: inline-block">
+                        <button id="deleteButton" type="button" class="btn btn-success btn-sm" style="width: 50px">完成</button>
+                        <button id="cancelButton" type="button" class="btn btn-secondary btn-sm" style="width: 50px">取消</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let data = [
-            {
-                title: '切尔诺贝利1',
-                url: '测试url1'
-            },
-            {
-                title: '切尔诺贝利2',
-                url: '测试url2'
-            },
-            {
-                title: '切尔诺贝利3',
-                url: '测试url3'
-            },
-            {
-                title: '切尔诺贝利4',
-                url: '测试url4'
-            },
-            {
-                title: '切尔诺贝利5',
-                url: '测试url5'
-            },
-            {
-                title: '切尔诺贝利6',
-                url: '测试url6'
-            },
-            {
-                title: '切尔诺贝利7',
-                url: '测试url7'
-            },
-            {
-                title: '切尔诺贝利8',
-                url: '测试url8'
-            },
-            {
-                title: '切尔诺贝利9',
-                url: '测试url9'
-            },
-            {
-                title: '切尔诺贝利10',
-                url: '测试url10'
-            },
-        ]
-        let showingItemCnt = 0
+        //=====model layer
+        const storage = require('electron-json-storage')
+        const qrcode = require('qrcode')
+        const defaultDataPath = storage.getDefaultDataPath()
+        console.log(defaultDataPath)
+        let localData = []
 
-        // <a id="list_9" class="list-group-item list-group-item-action flex-column align-items-start">
-        //             <div class="d-flex w-100 justify-content-between">
-        //                 <h5 class="mb-1">切尔诺贝利4</h5>
-        //             </div>
-        //         </a>
+        function loadData(uiCallback) {
+            storage.has('data', (error, hasKey) => {
+                if (error) throw error;
+                if (hasKey) {
+                    storage.get('data', (error, data) => {
+                        if (error) throw error
+                        localData = data
+                        uiCallback()
+                    })
+                }
+            })
+        }
+
+        function saveData() {
+            storage.set('data', localData, (error) => {
+                if (error) throw error
+            })
+        }
+
+        function appendItem(item, uiCallback) {
+            //console.log(item)
+            localData.push(item)
+            saveData(localData)
+            uiCallback()
+        }
+
+        function deleteItem(id, uiCallback) {
+            localData = localData.filter((ele) => {
+                return ele['id'] != id
+            })
+            saveData(localData)
+            uiCallback()
+        }
+
+        //=====UI layer
+        let showingItemCnt = 0
         function addItemToList(item) {
-            console.log(item)
             let title = item['title']
             let url = item['url']
-            let id = showingItemCnt++
+            let id = item['id']
 
             let a = document.createElement('a')
-            a.id = 'list_' + id
+            //a.id = id
+            a.setAttribute('data-id', id)
             a.setAttribute('data-title', title)
             a.setAttribute('data-url', url)
             a.classList.add('list-group-item')
@@ -128,13 +124,44 @@
             div.appendChild(h5)
             a.appendChild(div)
             //$('#list-tab').append(a)
-            console.log(a)
             document.getElementById('list-tab').appendChild(a)
         }
 
-        function showRight(index) {
-            $('#collapseExample').prop('currentIndex', index)
-            $('#testId').text(index)
+        function updateUI(dataList) {
+            $('#list-tab').html('')
+            for (let i in localData) {
+                addItemToList(localData[i])
+            }
+            $('#list-tab a').click(function () {
+                let isShow = $('#collapseExample').hasClass('show')
+                let id = $(this).attr('data-id')
+                let title = $(this).attr('data-title')
+                let url = $(this).attr('data-url')
+                let currentIndex = $('#collapseExample').prop('currentIndex')
+                if (!isShow) {
+                    showRight(id, title, url)
+                } else {
+                    closeRight()
+                    if (currentIndex != id) {
+                        showRight(id, title, url)
+                    }
+                }
+
+            })
+        }
+
+        function showRight(id, title, url) {
+            $('#collapseExample').prop('currentIndex', id)
+            $('#contentId').text(id)
+            $('#contentTitle').text(title)
+            $('#contentUrl').text(url)
+
+            var canvas = document.getElementById('qrcanvas')
+
+            qrcode.toCanvas(canvas, url, function (error) {
+                if (error) console.error(error)
+                console.log('qr success!');
+            })
             $('#collapseExample').addClass('show')
         }
 
@@ -142,30 +169,53 @@
             $('#collapseExample').removeClass('show')
         }
 
-
-
-        function init() {
-            for (let i in data) {
-                addItemToList(data[i])
-            }
-
-            $('#list-tab a').click(function () {
-                let isShow = $('#collapseExample').hasClass('show')
-                let id = $(this).prop('id')
-                let currentIndex = $('#collapseExample').prop('currentIndex')
-                if (!isShow) {
-                    showRight(id)
-                } else {
-                    closeRight()
-                    if (currentIndex != id) {
-                        showRight(id)
-                    }
-                }
-
-            })
+        function clearInput() {
+            $('#titleInput').val('')
+            $('#urlInput').val('')
         }
 
-        init()
+        //=====control layer
+        function addItem() {
+            let title = $('#titleInput').val()
+            let url = $('#urlInput').val()
+            if (title == '' || url == '') {
+                alert('input empty')
+                return
+            }
+            let newItem = {
+                id: new Date().getTime(),
+                title: title,
+                url: url
+            }
+            appendItem(newItem, updateUI)
+            clearInput()
+        }
+
+        function removeItem() {
+            let id = $('#contentId').text()
+            deleteItem(id, updateUI)
+            closeRight()
+        }
+
+        $(document).ready(function () {
+            loadData(updateUI)
+            $('#addButton').click(() => {
+                addItem()
+            })
+            $('#deleteButton').click(() => {
+                removeItem()
+            })
+            $('#cancelButton').click(() => {
+                closeRight()
+            })
+            $('*').click((e) => {
+                if (e.target.tagName == 'html') {
+                    alert(e.target);
+                    alert(e.target.tagName);
+                    // show background menu
+                }
+            });
+        })
     </script>
 
 </body>
