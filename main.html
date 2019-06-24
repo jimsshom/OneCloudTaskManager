@@ -38,18 +38,23 @@
             </div>
 
             <div class="col collapse" id="collapseExample"
-                style="position: fixed; top: 38px; left: 50%; height: 100%; width: 50%; z-index: 1060; padding: 0; overflow:scroll;">
-                <div class="card card-body" style="min-height: 100%; margin-bottom: 38px">
-                    <h1 id="contentTitle"></h1>
-                    <canvas id="qrcanvas"></canvas>
-                    <p id="contentUrl"></p>
-                    <span id="contentId" style="color: grey"></span>
+                style="position: fixed; top: 0px; left: 50%; height: 100%; width: 50%; z-index: 1060; padding: 0; overflow:scroll; ">
+                <div class="card card-body" style="min-height: 100%; padding-top: 38px;">
+                    <b id="contentTitle"></b>
+                    <canvas style="width: 90%" id="qrcanvas"></canvas>
+                    <p id="contentUrl" class="text-sm-left"></p>
                     <div style="display: inline-block">
                         <button id="deleteButton" type="button" class="btn btn-success btn-sm" style="width: 50px">完成</button>
                         <button id="cancelButton" type="button" class="btn btn-secondary btn-sm" style="width: 50px">取消</button>
+                        <span id="contentId" style="color: grey"></span>
                     </div>
                 </div>
             </div>
+        </div>
+
+
+        <div id="background" style="display:block; position:fixed; left:0; top:0; width:800px; height: 600px; z-index: -1; border:0px">
+
         </div>
     </div>
 
@@ -103,7 +108,7 @@
             let id = item['id']
 
             let a = document.createElement('a')
-            //a.id = id
+            a.id = id
             a.setAttribute('data-id', id)
             a.setAttribute('data-title', title)
             a.setAttribute('data-url', url)
@@ -137,7 +142,7 @@
                 let id = $(this).attr('data-id')
                 let title = $(this).attr('data-title')
                 let url = $(this).attr('data-url')
-                let currentIndex = $('#collapseExample').prop('currentIndex')
+                let currentIndex = $('#collapseExample').attr('currentIndex')
                 if (!isShow) {
                     showRight(id, title, url)
                 } else {
@@ -151,7 +156,8 @@
         }
 
         function showRight(id, title, url) {
-            $('#collapseExample').prop('currentIndex', id)
+            $('#'+id).addClass('active')
+            $('#collapseExample').attr('currentIndex', id)
             $('#contentId').text(id)
             $('#contentTitle').text(title)
             $('#contentUrl').text(url)
@@ -166,6 +172,7 @@
         }
 
         function closeRight() {
+            $('#' + $('#collapseExample').attr('currentIndex')).removeClass('active')
             $('#collapseExample').removeClass('show')
         }
 
@@ -199,6 +206,16 @@
 
         $(document).ready(function () {
             loadData(updateUI)
+            $('#titleInput').keypress((event) => {
+                if (event.which == 13) {
+                    addItem()
+                }
+            })
+            $('#urlInput').keypress((event) => {
+                if (event.which == 13) {
+                    addItem()
+                }
+            })
             $('#addButton').click(() => {
                 addItem()
             })
@@ -208,13 +225,11 @@
             $('#cancelButton').click(() => {
                 closeRight()
             })
-            $('*').click((e) => {
-                if (e.target.tagName == 'html') {
-                    alert(e.target);
-                    alert(e.target.tagName);
-                    // show background menu
-                }
-            });
+            $('#background').click((event) => {
+                event=event||window.event;
+                event.stopPropagation();
+                closeRight()
+            })
         })
     </script>
 

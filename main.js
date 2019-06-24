@@ -6,7 +6,7 @@ let mainWindow
 function createMainWindow() {
     let tmpX = 800
     let tmpY = 400
-    let debug = true
+    let debug = false
 
     let displays = electron.screen.getAllDisplays()
     let externalDisplay = displays.find((display) => {
